@@ -5,6 +5,8 @@ To clone this repo, please install Flask in your local computer and activate the
 
 You can refer to: https://linuxize.com/post/how-to-install-flask-on-ubuntu-18-04/ but just follow until $source venv/bin/activate
 
+Make sure to clone this repo everytime you want to work on it to avoid any conflicts. If any conflicts arise, please let others know as well. 
+
 Regards,
 Aze from G2
 
