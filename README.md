@@ -10,4 +10,9 @@ Make sure to pull this repo everytime you want to work on it to avoid any confli
 Regards,
 Aze from G2
 
+-----------
+
+Thank you for the guidance.
+Regards,
+Ulfah
 
