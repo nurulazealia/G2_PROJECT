@@ -11,7 +11,7 @@ def about():
     return render_template("about.html")
 
 @app.route("/lists")
-def about():
+def lists():
     return render_template("lists.html")
 
 if __name__ == "__main__":
