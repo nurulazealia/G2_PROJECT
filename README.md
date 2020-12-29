@@ -9,8 +9,8 @@ To go into venv shell everytime before running flask website, run $source venv/b
 
 Make sure to pull this repo everytime you want to work on it to avoid any conflicts. If any conflicts arise, please let others know as well. 
 
-Update: i used SQLAlchemy for the database. Please install it to your local repo by:
-pip install flask-sqlalchemy
+Update: i used SQLAlchemy for the database. Please install it to your local repo by running this in the venv:
+$pip install flask-sqlalchemy
 
 Regards,
 Aze from G2
