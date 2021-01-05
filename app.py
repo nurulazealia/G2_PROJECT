@@ -1,6 +1,7 @@
 from flask import Flask, render_template, redirect, request
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
+from tables import Results
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
@@ -25,7 +26,31 @@ def about():
 
 @app.route("/lists")
 def lists():
-    return render_template("lists.html")
+    sounds = Sounds.query.order_by(Sounds.date_uploaded)
+    return render_template("lists.html", sounds=sounds)
+
+@app.route("/delete/<int:id>")
+def delete(id):
+    list_to_delete = Sounds.query.get_or_404(id)
+    try:
+        db.session.delete(list_to_delete)
+        db.session.commit()
+        return redirect('/database')
+    except:
+        return "There was a problem deleting"
+
+@app.route("/update/<int:id>", methods = ['POST', 'GET'])
+def update(id):
+    list_to_update = Sounds.query.get_or_404(id)
+    if request.method == "POST":
+        list_to_update.title = request.form['title']
+        try:
+            db.session.commit()
+            return redirect('/database')
+        except:
+            return "There was a problem updating the database"
+    else:
+        return render_template("update.html", list_to_update = list_to_update)
 
 @app.route("/database", methods = ['POST', 'GET'])
 def database():
@@ -45,7 +70,9 @@ def database():
 
     else:
         sounds = Sounds.query.order_by(Sounds.date_uploaded)
-        return render_template("database.html", sounds=sounds)
+        table = Results(sounds)
+        table.border = True
+        return render_template("database.html", sounds=sounds, table=table)
 
 if __name__ == "__main__":
     app.run(debug=True)
