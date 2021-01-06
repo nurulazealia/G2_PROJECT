@@ -13,9 +13,11 @@
          </div>
       {%- endfor %}
       
-      <form action = "{{ request.path }}" method = "post">
-         <label for = "title">Sound Title</label><br>
-         <input type = "text" name = "title" placeholder = "Insert title here" /><br>
+      <form action = "/database" enctype="multipart/form-data" method = "post">
+         <div class="form-group">
+            <label for="inputFile"></label>
+            <input type = "file" name = "inputFile"  /><br>
+         </div>
          <br>
          <input type = "submit" value = "Upload" />
       </form>

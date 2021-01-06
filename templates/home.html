@@ -17,7 +17,30 @@
 <div class="container">
     <title>Bi-Sori</title>
     <br>
-    
+    <h1> Listen to the sound </h1>
+
+      <audio controls="controls" autoplay="autoplay" ></audio>
+      <u1>
+          {% for song in playlist %}
+
+          <li><a href="javascript:void(0);" onclick="playSong('{{song}}')">{{song}}</a></li>
+
+          {% endfor %}
+      </u1>
+      
+      {%- for category, message in get_flashed_messages(with_categories = true) %}
+         <div class = "alert alert-danger">
+            {{ message }}
+         </div>
+      {%- endfor %}
+      
+        <script type="text/javascript">
+            function playSong(song){
+                $('audio').attr('src', '/static/music/'+song)
+            }
+        </script>
+      <br></br>
+
 
   </div>
 {% endblock%}

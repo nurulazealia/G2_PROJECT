@@ -1,7 +1,8 @@
-from flask import Flask, render_template, redirect, request
+from flask import Flask, render_template, redirect, request, send_file
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 from tables import Results
+import os
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
@@ -11,14 +12,18 @@ db = SQLAlchemy(app)
 class Sounds(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(200), nullable=False)
+    data = db.Column(db.LargeBinary)
     date_uploaded = db.Column(db.DateTime, default=datetime.utcnow)
 
     def __repr__(self):
         return '<Title %r>' %self.id
 
-@app.route("/")
+@app.route("/", methods = ['GET'])
 def home():
-    return render_template("home.html")
+    #file_data = Sounds.query.filter_by(id=1).first()
+    playlist = os.listdir('static/music/')
+    return render_template("home.html", playlist=playlist)
+    
 
 @app.route("/about")
 def about():
@@ -51,14 +56,15 @@ def update(id):
             return "There was a problem updating the database"
     else:
         return render_template("update.html", list_to_update = list_to_update)
+    
 
 @app.route("/database", methods = ['POST', 'GET'])
 def database():
     db.create_all()
     
     if request.method == "POST":
-        sound_title = request.form['title']
-        new_sound = Sounds(title=sound_title)
+        file = request.files['inputFile']
+        new_sound = Sounds(title=file.filename, data=file.read())
 
         try:
             db.session.add(new_sound)
