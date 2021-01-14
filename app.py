@@ -34,6 +34,12 @@ def lists():
     sounds = Sounds.query.order_by(Sounds.date_uploaded)
     return render_template("lists.html", sounds=sounds)
 
+@app.route("/show/<int:id>", methods = ['GET'])
+def show(id):
+    list_to_show = Sounds.query.filter_by(id=1).first()
+    showing = list_to_show.data
+    return render_template("show.html", list_to_show = list_to_show, showing = showing)
+
 @app.route("/delete/<int:id>")
 def delete(id):
     list_to_delete = Sounds.query.get_or_404(id)
