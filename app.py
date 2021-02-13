@@ -1,7 +1,7 @@
 from flask import Flask, render_template, redirect, request, send_file
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
-from tables import Results
+from tables import Results, Explore
 import os
 
 app = Flask(__name__)
@@ -12,11 +12,14 @@ db = SQLAlchemy(app)
 class Sounds(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(200), nullable=False)
+    username = db.Column(db.String(200), nullable=False)
+    location = db.Column(db.String(200), nullable=False)
     data = db.Column(db.LargeBinary)
     date_uploaded = db.Column(db.DateTime, default=datetime.utcnow)
-
     def __repr__(self):
         return '<Title %r>' %self.id
+
+
 
 @app.route("/", methods = ['GET'])
 def home():
@@ -29,10 +32,11 @@ def home():
 def about():
     return render_template("about.html")
 
-@app.route("/lists")
-def lists():
+@app.route("/explore")
+def explore():
     sounds = Sounds.query.order_by(Sounds.date_uploaded)
-    return render_template("lists.html", sounds=sounds)
+    table1 = Explore(sounds)
+    return render_template("explore.html", sounds=sounds, table1=table1)
 
 @app.route("/show/<int:id>", methods = ['GET'])
 def show(id):
@@ -63,28 +67,50 @@ def update(id):
     else:
         return render_template("update.html", list_to_update = list_to_update)
     
+@app.route("/login", methods = ['POST', 'GET'])
+def login():
+    if request.method == "POST":
+        if request.form['email'] == 'admin@bisori.my' and request.form['password'] == 'admin123':
+            return redirect('/database')
+        else:
+            return "You are not allowed to view database"
+    else:
+        return render_template('login.html')
 
+    
+    
 @app.route("/database", methods = ['POST', 'GET'])
 def database():
+    
+    sounds = Sounds.query.order_by(Sounds.date_uploaded)
+    table = Results(sounds)
+    table.border = True
+
+    return render_template("database.html", sounds=sounds, table=table)
+
+@app.route("/confirm")
+def confirm():
+    
+    return render_template("confirm.html")
+
+@app.route("/upload", methods = ['POST', 'GET'])
+def upload():
     db.create_all()
     
     if request.method == "POST":
         file = request.files['inputFile']
-        new_sound = Sounds(title=file.filename, data=file.read())
+        new_sound = Sounds( data=file.read(), title=request.form["filename"], username=request.form["username"], location=request.form["location"])
 
         try:
             db.session.add(new_sound)
             db.session.commit()
-            return redirect ('/database')
+            return redirect ('/confirm')
 
         except:
             return "There was an error"
 
     else:
-        sounds = Sounds.query.order_by(Sounds.date_uploaded)
-        table = Results(sounds)
-        table.border = True
-        return render_template("database.html", sounds=sounds, table=table)
+        return render_template("upload.html")
 
 if __name__ == "__main__":
     app.run(debug=True)

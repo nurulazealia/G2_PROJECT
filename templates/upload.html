@@ -1,0 +1,43 @@
+{%extends 'base.html' %}
+{% block content %}
+
+<div class="container">
+    <title> Upload </title>
+    <h1>Upload your rainsound here:</h1>
+</br></br>
+
+      
+      
+      {%- for category, message in get_flashed_messages(with_categories = true) %}
+         <div class = "alert alert-danger">
+            {{ message }}
+         </div>
+      {%- endfor %}
+      
+      <form action = "/upload" enctype="multipart/form-data" method = "post">
+         <div class="form-group">
+            <label for="inputFile"></label>
+            <input type = "file" name = "inputFile" /><br>
+            <input type = "text" class = "form-control" 
+            placeholder = "Insert filename here (Eg: rainsound.mp3)" name = "filename"  />
+         </div>
+         <br>
+         <div class="form-group">
+             <label for="username">Username:</label><br>
+            <input type = "text" class = "form-control" 
+            placeholder = "Insert your username here" name = "username"  /><br>
+         </div>
+         <div class="form-group">
+            <label for="location">Location of the rainsound recorded:</label><br>
+            <input type = "text" class = "form-control" 
+            placeholder = "Eg: Selangor, Malaysia" name = "location"  /><br>
+         </div>
+         <br>
+         <input type = "submit" value = "Upload" />
+      </form>
+
+      <br></br>
+
+</div>
+
+{% endblock %}

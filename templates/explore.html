@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% block content%}
+
+
+<div class="container">
+    <title> Lists </title>
+    <h1> List of rainsounds </h1><br>
+    <p>This page contains all rainsounds send by our users.</p>
+    <p>Click to listen to the rainsound and view the details.</p>
+
+
+
+    {%- for category, message in get_flashed_messages(with_categories = true) %}
+    <div class = "alert alert-danger">
+       {{ message }}
+    </div>
+    {%- endfor %}
+ 
+
+
+ <br></br>
+
+    {{ table1 }}
+
+
+
+
+</div>
+
+{% endblock%}
