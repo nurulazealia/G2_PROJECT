@@ -4,6 +4,9 @@ from datetime import datetime
 from tables import Results, Explore
 from werkzeug.utils import secure_filename
 import os
+import librosa, librosa.display
+import matplotlib.pyplot as plt 
+import numpy as np 
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
@@ -22,7 +25,7 @@ class Sounds(db.Model):
 
 
 
-@app.route("/", methods = ['GET'])
+@app.route("/", methods = ['GET', 'POST'])
 def home():
     #file_data = Sounds.query.filter_by(id=1).first()
     playlist = os.listdir('static/music/')
@@ -44,7 +47,15 @@ def show(id):
     list_to_show = Sounds.query.get_or_404(id)
     playing = list_to_show.title
     playlist = "/static/music"+playing
-    return render_template("show.html", list_to_show = list_to_show, playing=playing, playlist=playlist)
+    file = r'/home/zh/myflaskapp/G2_PROJECT/static/music/StarWars60.wav' # problem: individual path of audio file
+    signal, sr = librosa.load(file, sr = 22050)
+    librosa.display.waveplot(signal,sr)
+    plt.title('Spectrogram') # spectrogram of %r % file for title
+    plt.xlabel("Time")
+    plt.ylabel("Amplitude")
+    plt.show()
+    user_image = plt.savefig('/home/zh/myflaskapp/G2_PROJECT/static/images/spectrogram.png')
+    return render_template("show.html", list_to_show = list_to_show, playing=playing, playlist=playlist, file=file, user_image=user_image)
 
 @app.route("/delete/<int:id>")
 def delete(id):
@@ -97,7 +108,7 @@ def confirm():
     
     return render_template("confirm.html")
 
-app.config["FILE_UPLOADS"] = "/home/azealiaa/flask_project/G2_PROJECT/static/music"
+app.config["FILE_UPLOADS"] = "/home/zh/myflaskapp/G2_PROJECT/static/music"
 
 @app.route("/upload", methods = ['POST', 'GET'])
 def upload():
