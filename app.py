@@ -2,6 +2,7 @@ from flask import Flask, render_template, redirect, request, send_file
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 from tables import Results, Explore
+from werkzeug.utils import secure_filename
 import os
 
 app = Flask(__name__)
@@ -41,12 +42,14 @@ def explore():
 @app.route("/show/<int:id>", methods = ['GET'])
 def show(id):
     list_to_show = Sounds.query.filter_by(id=1).first()
-    showing = list_to_show.data
-    return render_template("show.html", list_to_show = list_to_show, showing = showing)
+    playing = list_to_show.title
+    return render_template("show.html", list_to_show = list_to_show, playing=playing)
 
 @app.route("/delete/<int:id>")
 def delete(id):
     list_to_delete = Sounds.query.get_or_404(id)
+    filename = list_to_delete.title
+    os.remove(os.path.join(app.config["FILE_UPLOADS"], filename))
     try:
         db.session.delete(list_to_delete)
         db.session.commit()
@@ -93,21 +96,28 @@ def confirm():
     
     return render_template("confirm.html")
 
+app.config["FILE_UPLOADS"] = "/home/azealiaa/flask_project/G2_PROJECT/static/music"
+
 @app.route("/upload", methods = ['POST', 'GET'])
 def upload():
     db.create_all()
     
     if request.method == "POST":
-        file = request.files['inputFile']
-        new_sound = Sounds( data=file.read(), title=request.form["filename"], username=request.form["username"], location=request.form["location"])
 
-        try:
-            db.session.add(new_sound)
-            db.session.commit()
-            return redirect ('/confirm')
+        if request.files:
 
-        except:
-            return "There was an error"
+            audio = request.files['inputFile']
+            filename = secure_filename(audio.filename)
+            audio.save(os.path.join(app.config["FILE_UPLOADS"], filename))
+
+            new_sound = Sounds( data=audio.read(), title=filename, username=request.form["username"], location=request.form["location"])
+            try:
+                db.session.add(new_sound)
+                db.session.commit()
+                return redirect ('/confirm')
+
+            except:
+                return "There was an error"
 
     else:
         return render_template("upload.html")

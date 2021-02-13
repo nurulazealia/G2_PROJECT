@@ -6,22 +6,27 @@
 
 <div class="container">
 </br>
-      <audio controls="controls" autoplay="autoplay" ></audio>
-      <u1>
-        
+<audio controls="controls" autoplay="autoplay" ></audio>
+<u1>
+    
 
-          <li><a href="javascript:void(0);" onclick="playSong('{{song}}')"></a></li>
+    <li><a href="javascript:void(0);" onclick="playSong('{{playing}}')">{{playing}}</a></li>
 
-         
-      </u1>
-      
-      {%- for category, message in get_flashed_messages(with_categories = true) %}
-         <div class = "alert alert-danger">
-            {{ message }}
-         </div>
-      {%- endfor %}
+    
+</u1>
 
-      <br></br>
+{%- for category, message in get_flashed_messages(with_categories = true) %}
+   <div class = "alert alert-danger">
+      {{ message }}
+   </div>
+{%- endfor %}
+<script type="text/javascript">
+   function playSong(playing){
+       $('audio').attr('src', '/static/music/'+playing)
+   }
+</script>
+
+<br></br>
 
 
   </div>
