@@ -41,9 +41,10 @@ def explore():
 
 @app.route("/show/<int:id>", methods = ['GET'])
 def show(id):
-    list_to_show = Sounds.query.filter_by(id=1).first()
+    list_to_show = Sounds.query.get_or_404(id)
     playing = list_to_show.title
-    return render_template("show.html", list_to_show = list_to_show, playing=playing)
+    playlist = "/static/music"+playing
+    return render_template("show.html", list_to_show = list_to_show, playing=playing, playlist=playlist)
 
 @app.route("/delete/<int:id>")
 def delete(id):
