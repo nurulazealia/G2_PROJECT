@@ -22,3 +22,9 @@ Thank you for the guidance.
 Regards,
 Ulfah
 
+-----------
+
+14/2/2021
+remember to change directory address before running.
+images folder under static created to store spectrogram.png
+~Ulfah~
