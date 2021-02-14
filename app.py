@@ -47,19 +47,10 @@ def show(id):
     list_to_show = Sounds.query.get_or_404(id)
     playing = list_to_show.title
     image_name = playing.split('.')
-    image = "/home/azealiaa/flask_project/G2_PROJECT/static/images/" + image_name[0] + ".png"
     image_display = "images/" + image_name[0] + ".png"
     playlist = "/static/music/"+playing
-    file = "/home/azealiaa/flask_project/G2_PROJECT" + playlist 
-    plt.clf()
-    signal, sr = librosa.load(file, sr = 44100)
-    librosa.display.waveplot(signal,sr)
-    plt.title('Waveform') # waveform of %r % file for title
-    plt.xlabel("Time")
-    plt.ylabel("Amplitude")
-    plt.show()
-    user_image = plt.savefig(image)
-    return render_template("show.html", list_to_show = list_to_show, playing=playing, playlist=playlist, file=file, image_display=image_display, user_image=user_image)
+    
+    return render_template("show.html", list_to_show = list_to_show, playing=playing, playlist=playlist, image_display=image_display)
 
 @app.route("/delete/<int:id>")
 def delete(id):
@@ -125,6 +116,19 @@ def upload():
             audio = request.files['inputFile']
             filename = secure_filename(audio.filename)
             audio.save(os.path.join(app.config["FILE_UPLOADS"], filename))
+
+            image_name = filename.split('.')
+            image = "/home/azealiaa/flask_project/G2_PROJECT/static/images/" + image_name[0] + ".png"
+
+            file = "/home/azealiaa/flask_project/G2_PROJECT/static/music/" + filename 
+            plt.clf()
+            signal, sr = librosa.load(file, sr = 44100)
+            librosa.display.waveplot(signal,sr)
+            plt.title('Waveform') # waveform of %r % file for title
+            plt.xlabel("Time")
+            plt.ylabel("Amplitude")
+            plt.show()
+            user_image = plt.savefig(image)
 
             new_sound = Sounds( data=audio.read(), title=filename, username=request.form["username"], location=request.form["location"])
             try:
