@@ -8,9 +8,9 @@
 <u1>
     
 
-    <li><a href="javascript:void(0);" onclick="playSong('{{playing}}')">{{playing}}</a></li>
+    <li><a href="javascript:void(0);" onclick="playSong('{{playlist}}')">{{playing}}</a></li>
 
-    <img src = "{{ url_for('static', filename=image_display) }}" allign = "middle" />
+    <img src = "{{ image_display }}" allign = "middle" />
     
 </u1>
 
@@ -20,8 +20,8 @@
    </div>
 {%- endfor %}
 <script type="text/javascript">
-   function playSong(playing){
-       $('audio').attr('src', '/static/music/'+playing)
+   function playSong(playlist){
+       $('audio').attr('src', playlist)
    }
 
 </script>
