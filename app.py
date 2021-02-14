@@ -1,7 +1,7 @@
 from flask import Flask, render_template, redirect, request, send_file
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
-from tables import Results, Explore, Reports
+from tables import Results, Explore, Reports, Paths
 from werkzeug.utils import secure_filename
 import os
 import librosa, librosa.display # Librosa is a Python library that helps us work with audio data and display for visualization
@@ -20,7 +20,10 @@ class Sounds(db.Model):
     location = db.Column(db.String(200), nullable=False)
     sound_path = db.Column(db.String(400), nullable=False)
     waveform_path = db.Column(db.String(400), nullable=False)
+    sampling_freq = db.Column(db.Integer, nullable=False)
     file_type = db.Column(db.String(200), nullable=False)
+    file_duration = db.Column(db.Float,nullable=False)
+    file_size = db.Column(db.Float, nullable=False)
     data = db.Column(db.LargeBinary)
     date_uploaded = db.Column(db.DateTime, default=datetime.utcnow)
     def __repr__(self):
@@ -47,14 +50,15 @@ def explore():
 def show(id):
     list_to_show = Sounds.query.get_or_404(id)
     playing = list_to_show.title
-    #image_name = playing.split('.')
-    #image_display = "images/" + image_name[0] + ".png"
     image_display = list_to_show.waveform_path
-    #playlist = "/static/music/"+playing
     playlist = list_to_show.sound_path
-    
-    
-    return render_template("show.html", list_to_show = list_to_show, playing=playing, playlist=playlist, image_display=image_display)
+    user = list_to_show.username
+    location = list_to_show.location
+    duration = round(list_to_show.file_duration,2)
+    filesize = round(list_to_show.file_size,2)
+    filetype = list_to_show.file_type 
+    sampling = list_to_show.sampling_freq   
+    return render_template("show.html", list_to_show = list_to_show, user=user, location=location, playing=playing, playlist=playlist, image_display=image_display, duration=duration, filetype=filetype, filesize=filesize, sampling=sampling)
 
 @app.route("/delete/<int:id>")
 def delete(id):
@@ -103,10 +107,13 @@ def database():
     table = Results(sounds)
     table.border = True
 
+    table_path = Paths(sounds)
+    table_path.border = True
+
     table_result = Reports(sounds)
     table_result.border = True
 
-    return render_template("database.html", sounds=sounds, table=table, table_result=table_result)
+    return render_template("database.html", sounds=sounds, table=table, table_result=table_result, table_path=table_path)
 
 @app.route("/confirm")
 def confirm():
@@ -125,23 +132,32 @@ def upload():
 
             audio = request.files['inputFile']
             filename = secure_filename(audio.filename)
-            audio.save(os.path.join(app.config["FILE_UPLOADS"], filename))
-
+            user = secure_filename(request.form["username"])
+            audio.save(os.path.join("/home/azealiaa/flask_project/G2_PROJECT/static/music/" + user + "_" + filename))
             image_name = filename.split('.')
-            image = "/home/azealiaa/flask_project/G2_PROJECT/static/images/" + image_name[0] + ".png"
-            image_path = "/static/images/" + image_name[0] + ".png"
-            audio_path = "/static/music/" + filename
-            file = "/home/azealiaa/flask_project/G2_PROJECT/static/music/" + filename 
+            image = "/home/azealiaa/flask_project/G2_PROJECT/static/images/" + user + "_" + image_name[0] + ".png"
+            image_path = "/static/images/" + user + "_" + image_name[0] + ".png"
+            audio_path = "/static/music/" + user + "_" + filename
+            file = "/home/azealiaa/flask_project/G2_PROJECT/static/music/" + user + "_" + filename 
             plt.clf()
-            signal, sr = librosa.load(file, sr = 44100)
+            signal, sr = librosa.load(file)
+            plt.figure(figsize=(10,10))
+            plt.subplot(211)
             librosa.display.waveplot(signal,sr)
-            plt.title('Waveform') # waveform of %r % file for title
-            plt.xlabel("Time")
+            plt.title('Waveform and Spectogram') # waveform of %r % file for title
             plt.ylabel("Amplitude")
+            X = librosa.stft(signal)
+            Xdb = librosa.amplitude_to_db(abs(X))
+            plt.subplot(212)
+            librosa.display.specshow(Xdb, sr=sr, x_axis='time', y_axis='hz')
             plt.show()
             plt.savefig(image)
-
-            new_sound = Sounds( data=audio.read(), title=filename, username=request.form["username"], location=request.form["location"], sound_path=audio_path, waveform_path=image_path, file_type=image_name[1])
+            
+            duration = librosa.get_duration(y=signal,sr=sr)
+            file_size_byte = os.path.getsize(file)
+            file_size = file_size_byte/1024
+            
+            new_sound = Sounds( data=audio.read(), title=filename, username=request.form["username"], location=request.form["location"], sound_path=audio_path, waveform_path=image_path, file_type=image_name[1], file_duration=duration, file_size=file_size, sampling_freq=sr)
             
             try:
                 db.session.add(new_sound)

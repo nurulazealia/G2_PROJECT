@@ -2,16 +2,109 @@
 {% block content%}
 
 
-<div class="container">
-</br>
-<audio controls="controls" autoplay="autoplay" ></audio>
-<u1>
-    
 
-    <li><a href="javascript:void(0);" onclick="playSong('{{playlist}}')">{{playing}}</a></li>
+   <div class="container">
+   </br>
+   
+   <u1>
+       
+   
+      
+      <center><audio controls="controls" allign = "center" autoplay="autoplay" ></audio></center>
+      <center><li><a href="javascript:void(0);" allign = "middle" onclick="playSong('{{playlist}}')">{{playing}}</a></li></center>
+      
+ <head>
+    <style>
+    {
+        box-sizing: border-box;
+    }
+    /* Set additional styling options for the columns*/
+    .column {
+    float: left;
+    width: 50%;
+    }
 
-    <img src = "{{ image_display }}" allign = "middle" />
-    
+    .row:after {
+    content: "";
+    display: table;
+    clear: both;
+    }
+    </style>
+ </head>
+ 
+
+   <body>
+      <div class="row">
+          <div class="column" style="background-color:#ffffff;">
+   <center><img src = "{{ image_display }}" allign = "middle" width="600" /></center>
+</div>
+<div class="column" style="background-color:#ffffff;">
+   <head>
+      <style>
+      
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      
+      table {
+        width:100%
+      }
+      table, th, td {
+        border: 1px solid white;
+        border-collapse: collapse;
+      }
+      table, th, td {
+        padding: 15px;
+        text-align: center;
+      }
+      #t01 tr:nth-child(even) {
+        background-color:lightblue;
+        color:black;
+      }
+      #t01 tr:nth-child(odd) {
+       background-color:navy;
+       color:white;
+      }
+      </style>
+      </head>
+      <center>
+      <body>
+      <br><br>
+      <h3 style="text-align:center"> Audio File Report </h3>
+      
+      <table id="t01">
+        <tr>
+          <th>User</th>
+          <td>{{user}}</td>
+        </tr>
+        <tr>
+          <th>Location</th>
+          <td>{{location}}</td>
+        </tr>
+        <tr>
+          <th>Length (seconds)</th>
+          <td>{{duration}}</td> 
+        </tr>
+        <tr>
+          <th>File Size (kB)</th>
+          <td>{{filesize}}</td>
+        </tr>
+        <tr>
+          <th>File Type</th>
+          <td>{{filetype}}</td>
+        </tr>
+        <tr>
+          <th>Sampling Frequency (Hz)</th>
+          <td>{{sampling}}</td>
+        </tr>
+      
+      </table>
+      
+      </body>
+   </center>
+</div>
+</div>
+</body>
+
 </u1>
 
 {%- for category, message in get_flashed_messages(with_categories = true) %}
