@@ -46,16 +46,20 @@ def explore():
 def show(id):
     list_to_show = Sounds.query.get_or_404(id)
     playing = list_to_show.title
-    playlist = "/static/music"+playing
-    file = r'/home/zh/myflaskapp/G2_PROJECT/static/music/StarWars60.wav' # problem: individual path of audio file
-    signal, sr = librosa.load(file, sr = 22050)
+    image_name = playing.split('.')
+    image = "/home/azealiaa/flask_project/G2_PROJECT/static/images/" + image_name[0] + ".png"
+    image_display = "images/" + image_name[0] + ".png"
+    playlist = "/static/music/"+playing
+    file = "/home/azealiaa/flask_project/G2_PROJECT" + playlist 
+    plt.clf()
+    signal, sr = librosa.load(file, sr = 44100)
     librosa.display.waveplot(signal,sr)
-    plt.title('Spectrogram') # spectrogram of %r % file for title
+    plt.title('Waveform') # waveform of %r % file for title
     plt.xlabel("Time")
     plt.ylabel("Amplitude")
     plt.show()
-    user_image = plt.savefig('/home/zh/myflaskapp/G2_PROJECT/static/images/spectrogram.png')
-    return render_template("show.html", list_to_show = list_to_show, playing=playing, playlist=playlist, file=file, user_image=user_image)
+    user_image = plt.savefig(image)
+    return render_template("show.html", list_to_show = list_to_show, playing=playing, playlist=playlist, file=file, image_display=image_display, user_image=user_image)
 
 @app.route("/delete/<int:id>")
 def delete(id):
@@ -108,7 +112,7 @@ def confirm():
     
     return render_template("confirm.html")
 
-app.config["FILE_UPLOADS"] = "/home/zh/myflaskapp/G2_PROJECT/static/music"
+app.config["FILE_UPLOADS"] = "/home/azealiaa/flask_project/G2_PROJECT/static/music"
 
 @app.route("/upload", methods = ['POST', 'GET'])
 def upload():

@@ -2,8 +2,6 @@
 {% block content%}
 
 
-
-
 <div class="container">
 </br>
 <audio controls="controls" autoplay="autoplay" ></audio>
@@ -12,7 +10,7 @@
 
     <li><a href="javascript:void(0);" onclick="playSong('{{playing}}')">{{playing}}</a></li>
 
-    <img src = "{{ url_for('static', filename = 'images/spectrogram.png') }}" allign = "middle" />
+    <img src = "{{ url_for('static', filename=image_display) }}" allign = "middle" />
     
 </u1>
 
@@ -25,6 +23,7 @@
    function playSong(playing){
        $('audio').attr('src', '/static/music/'+playing)
    }
+
 </script>
 
 <br></br>
