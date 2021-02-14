@@ -25,6 +25,9 @@ Ulfah
 -----------
 
 14/2/2021
-remember to change directory address before running.
-images folder under static created to store spectrogram.png
-~Ulfah~
+
+Remember to change directory address before running.
+
+Images folder under static created to store spectrogram.png
+
+Ulfah
