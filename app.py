@@ -1,7 +1,7 @@
 from flask import Flask, render_template, redirect, request, send_file
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
-from tables import Results, Explore
+from tables import Results, Explore, Reports
 from werkzeug.utils import secure_filename
 import os
 import librosa, librosa.display # Librosa is a Python library that helps us work with audio data and display for visualization
@@ -18,12 +18,13 @@ class Sounds(db.Model):
     title = db.Column(db.String(200), nullable=False)
     username = db.Column(db.String(200), nullable=False)
     location = db.Column(db.String(200), nullable=False)
+    sound_path = db.Column(db.String(400), nullable=False)
+    waveform_path = db.Column(db.String(400), nullable=False)
+    file_type = db.Column(db.String(200), nullable=False)
     data = db.Column(db.LargeBinary)
     date_uploaded = db.Column(db.DateTime, default=datetime.utcnow)
     def __repr__(self):
         return '<Title %r>' %self.id
-
-
 
 @app.route("/", methods = ['GET', 'POST'])
 def home():
@@ -46,17 +47,23 @@ def explore():
 def show(id):
     list_to_show = Sounds.query.get_or_404(id)
     playing = list_to_show.title
-    image_name = playing.split('.')
-    image_display = "images/" + image_name[0] + ".png"
-    playlist = "/static/music/"+playing
+    #image_name = playing.split('.')
+    #image_display = "images/" + image_name[0] + ".png"
+    image_display = list_to_show.waveform_path
+    #playlist = "/static/music/"+playing
+    playlist = list_to_show.sound_path
+    
     
     return render_template("show.html", list_to_show = list_to_show, playing=playing, playlist=playlist, image_display=image_display)
 
 @app.route("/delete/<int:id>")
 def delete(id):
     list_to_delete = Sounds.query.get_or_404(id)
-    filename = list_to_delete.title
-    os.remove(os.path.join(app.config["FILE_UPLOADS"], filename))
+    path = "/home/azealiaa/flask_project/G2_PROJECT"
+    sound = path + list_to_delete.sound_path
+    image = path + list_to_delete.waveform_path
+    os.remove(os.path.join(sound))
+    os.remove(os.path.join(image))
     try:
         db.session.delete(list_to_delete)
         db.session.commit()
@@ -96,7 +103,10 @@ def database():
     table = Results(sounds)
     table.border = True
 
-    return render_template("database.html", sounds=sounds, table=table)
+    table_result = Reports(sounds)
+    table_result.border = True
+
+    return render_template("database.html", sounds=sounds, table=table, table_result=table_result)
 
 @app.route("/confirm")
 def confirm():
@@ -119,7 +129,8 @@ def upload():
 
             image_name = filename.split('.')
             image = "/home/azealiaa/flask_project/G2_PROJECT/static/images/" + image_name[0] + ".png"
-
+            image_path = "/static/images/" + image_name[0] + ".png"
+            audio_path = "/static/music/" + filename
             file = "/home/azealiaa/flask_project/G2_PROJECT/static/music/" + filename 
             plt.clf()
             signal, sr = librosa.load(file, sr = 44100)
@@ -128,9 +139,10 @@ def upload():
             plt.xlabel("Time")
             plt.ylabel("Amplitude")
             plt.show()
-            user_image = plt.savefig(image)
+            plt.savefig(image)
 
-            new_sound = Sounds( data=audio.read(), title=filename, username=request.form["username"], location=request.form["location"])
+            new_sound = Sounds( data=audio.read(), title=filename, username=request.form["username"], location=request.form["location"], sound_path=audio_path, waveform_path=image_path, file_type=image_name[1])
+            
             try:
                 db.session.add(new_sound)
                 db.session.commit()
