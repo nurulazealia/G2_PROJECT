@@ -4,7 +4,7 @@ from datetime import datetime
 from tables import Results, Explore
 from werkzeug.utils import secure_filename
 import os
-import librosa, librosa.display
+import librosa, librosa.display # Librosa is a Python library that helps us work with audio data and display for visualization
 import matplotlib.pyplot as plt 
 import numpy as np 
 
@@ -47,13 +47,23 @@ def show(id):
     list_to_show = Sounds.query.get_or_404(id)
     playing = list_to_show.title
     playlist = "/static/music"+playing
+    # waveplot
     file = r'/home/zh/myflaskapp/G2_PROJECT/static/music/StarWars60.wav' # problem: individual path of audio file
-    signal, sr = librosa.load(file, sr = 22050)
+    signal, sr = librosa.load(file, sr = 22050) # sampling rate = 22050
     librosa.display.waveplot(signal,sr)
-    plt.title('Spectrogram') # spectrogram of %r % file for title
+    plt.title('Waveplot') # Waveplot of %r % file for title
     plt.xlabel("Time")
     plt.ylabel("Amplitude")
     plt.show()
+    user_image = plt.savefig('/home/zh/myflaskapp/G2_PROJECT/static/images/waveplot.png')
+    # spectrogram
+    X = librosa.stft(signal)
+    #converting into energy levels(dB)
+    Xdb = librosa.amplitude_to_db(abs(X))
+    plt.figure(figsize=(20, 5))
+    librosa.display.specshow(Xdb, sr=sr, x_axis='time', y_axis='hz')
+    plt.colorbar()        
+    plt.title('Spectrogram') # spectrogram of %r % file for title
     user_image = plt.savefig('/home/zh/myflaskapp/G2_PROJECT/static/images/spectrogram.png')
     return render_template("show.html", list_to_show = list_to_show, playing=playing, playlist=playlist, file=file, user_image=user_image)
 
