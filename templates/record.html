@@ -1,0 +1,42 @@
+{%extends 'base.html' %}
+{% block content %}
+
+<div class="container">
+    <title> Record </title>
+    <h1>Record your rainsound</h1>
+    <small>Please save the audio file to your device first, and upload it <a href="/upload">HERE!</a></small>
+</br></br>
+
+      
+      
+      {%- for category, message in get_flashed_messages(with_categories = true) %}
+         <div class = "alert alert-danger">
+            {{ message }}
+         </div>
+      {%- endfor %}
+      <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      </head>
+      <body>
+        
+    
+        <div id="controls">
+         <button id="recordButton" class="btn btn-primary">Record</button>
+         <button id="pauseButton" disabled class="btn btn-secondary">Pause</button>
+         <button id="stopButton" disabled class="btn btn-danger">Stop</button>
+        </div>
+        <div id="formats">Format: start recording to see sample rate</div>
+        <br><p><strong>Recordings:</strong></p>
+        <ol id="recordingsList"></ol>
+        <!-- inserting these scripts at the end to be able to use all the elements in the DOM -->
+        <script src="https://cdn.rawgit.com/mattdiamond/Recorderjs/08e7abd9/dist/recorder.js"></script>
+        <script src="/static/js/app.js"></script>
+      </body>
+      
+  
+      <br></br>
+
+</div>
+
+{% endblock %}

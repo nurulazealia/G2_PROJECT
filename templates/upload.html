@@ -3,7 +3,7 @@
 
 <div class="container">
     <title> Upload </title>
-    <h1>Upload your rainsound here:</h1>
+    <h1>Upload your rainsound</h1>
 </br></br>
 
       
@@ -17,10 +17,10 @@
       <form action = "/upload" enctype="multipart/form-data" method = "post">
          <div class="form-group">
             <label for="inputFile"></label>
-            <input type = "file" name = "inputFile" id = "inputFile"/><br>
-            
+            <input type = "file" name = "inputFile" id = "inputFile" class="btn btn-primary"/><br>
+            <input type = "text" class = "form-control" 
+            placeholder = "Insert filename here (Eg: rainsound.mp3)" name = "filename"  /><br>
          </div>
-         <br>
          <div class="form-group">
              <label for="username">Username:</label><br>
             <input type = "text" class = "form-control" 
@@ -32,7 +32,7 @@
             placeholder = "Eg: Selangor, Malaysia" name = "location"  /><br>
          </div>
          <br>
-         <input type = "submit" value = "Upload" />
+         <input type = "submit" value = "Upload" class="btn btn-primary" />
       </form>
 
       <br></br>

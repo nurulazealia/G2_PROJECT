@@ -31,8 +31,7 @@ class Sounds(db.Model):
 
 @app.route("/", methods = ['GET', 'POST'])
 def home():
-    #file_data = Sounds.query.filter_by(id=1).first()
-    playlist = os.listdir('static/music/')
+    playlist = os.listdir('static/music/')[:10]
     return render_template("home.html", playlist=playlist)
     
 
@@ -46,6 +45,12 @@ def explore():
     table1 = Explore(sounds)
     return render_template("explore.html", sounds=sounds, table1=table1)
 
+@app.route("/download/<int:id>")
+def download(id):
+    list_to_download = Sounds.query.get_or_404(id)
+    download_audio = "/home/azealiaa/flask_project/G2_PROJECT" + list_to_download.sound_path
+    return send_file(download_audio, as_attachment=True)
+
 @app.route("/show/<int:id>", methods = ['GET'])
 def show(id):
     list_to_show = Sounds.query.get_or_404(id)
@@ -57,8 +62,9 @@ def show(id):
     duration = round(list_to_show.file_duration,2)
     filesize = round(list_to_show.file_size,2)
     filetype = list_to_show.file_type 
-    sampling = list_to_show.sampling_freq   
-    return render_template("show.html", list_to_show = list_to_show, user=user, location=location, playing=playing, playlist=playlist, image_display=image_display, duration=duration, filetype=filetype, filesize=filesize, sampling=sampling)
+    sampling = list_to_show.sampling_freq  
+    download_id =  list_to_show.id
+    return render_template("show.html", list_to_show = list_to_show, user=user, location=location, playing=playing, playlist=playlist, image_display=image_display, duration=duration, filetype=filetype, filesize=filesize, sampling=sampling, download_id=download_id)
 
 @app.route("/delete/<int:id>")
 def delete(id):
@@ -75,19 +81,6 @@ def delete(id):
     except:
         return "There was a problem deleting"
 
-@app.route("/update/<int:id>", methods = ['POST', 'GET'])
-def update(id):
-    list_to_update = Sounds.query.get_or_404(id)
-    if request.method == "POST":
-        list_to_update.title = request.form['title']
-        try:
-            db.session.commit()
-            return redirect('/database')
-        except:
-            return "There was a problem updating the database"
-    else:
-        return render_template("update.html", list_to_update = list_to_update)
-    
 @app.route("/login", methods = ['POST', 'GET'])
 def login():
     if request.method == "POST":
@@ -120,7 +113,6 @@ def confirm():
     
     return render_template("confirm.html")
 
-app.config["FILE_UPLOADS"] = "/home/azealiaa/flask_project/G2_PROJECT/static/music"
 
 @app.route("/upload", methods = ['POST', 'GET'])
 def upload():
@@ -131,7 +123,8 @@ def upload():
         if request.files:
 
             audio = request.files['inputFile']
-            filename = secure_filename(audio.filename)
+            audio_filename = request.form["filename"]
+            filename = secure_filename(audio_filename)
             user = secure_filename(request.form["username"])
             audio.save(os.path.join("/home/azealiaa/flask_project/G2_PROJECT/static/music/" + user + "_" + filename))
             image_name = filename.split('.')
@@ -169,6 +162,23 @@ def upload():
 
     else:
         return render_template("upload.html")
+
+@app.route("/record", methods=['POST', 'GET'])
+def record():
+    db.create_all()
+
+    if request.method == "POST":
+        f = open('./file.wav', 'wb')
+        f.write(request.get_data("audio_data"))
+        f.close()
+        if os.path.isfile('./file.wav'):
+            print("./file.wav exists")
+
+        return render_template('record.html', request="POST")   
+    else:
+        return render_template("record.html")
+
+app.config["FILE_UPLOADS"] = "/home/azealiaa/flask_project/G2_PROJECT/static/music"
 
 if __name__ == "__main__":
     app.run(debug=True)

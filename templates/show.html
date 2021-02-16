@@ -11,8 +11,8 @@
    
       
       <center><audio controls="controls" allign = "center" autoplay="autoplay" ></audio></center>
-      <center><li><a href="javascript:void(0);" allign = "middle" onclick="playSong('{{playlist}}')">{{playing}}</a></li></center>
-      
+      <center><a href="javascript:void(0);" allign = "middle" onclick="playSong('{{playlist}}')"><button class="btn btn-primary">Play</button></a>
+      <a href="/download/{{download_id}}" target="black"><button class="btn btn-success">Download</button></a></center>
  <head>
     <style>
     {
@@ -57,11 +57,11 @@
         text-align: center;
       }
       #t01 tr:nth-child(even) {
-        background-color:lightblue;
+        background-color:rgb(198, 202, 248);
         color:black;
       }
       #t01 tr:nth-child(odd) {
-       background-color:navy;
+       background-color:rgb(65, 65, 172);
        color:white;
       }
       </style>

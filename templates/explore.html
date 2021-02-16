@@ -4,27 +4,61 @@
 
 <div class="container">
     <title> Explore </title>
-    <h2> Explore more rainsounds from all around the world! </h2><br>
-    <p>This page contains all rainsounds send by our users.</p>
-    <p>Click to listen to the rainsound and view the details.</p>
+    <h1> Explore more rainsound </h1><br>
+    <p>This page contains all rainsounds send by our users from all around the world.</p>
+    <p>Click View to listen, download and know more about the sound.</p>
+    
+    <table id="example" class="table table-striped" style="width:100%">
+    <thead>
+      
+      <style>
+          
+          th
+          {
+              background-color: rgb(65, 65, 172);
+              border: 1px solid #fff;
+              border-collapse: collapse;
+              padding: 10px;
+              font-size:16px;
+              color: #fff; 
+              text-align: left;
+          }
 
+          table,  td
+          {
+              background-color: rgb(198, 202, 248);
+              border: 1px solid #fff;
+              border-collapse: collapse;
+              padding: 10px;
+              font-size:16px;
+              text-align: left;
+          }
 
+      </style>
+  </thead>
+  <tbody>
+     
+      
 
-    {%- for category, message in get_flashed_messages(with_categories = true) %}
-    <div class = "alert alert-danger">
-       {{ message }}
-    </div>
-    {%- endfor %}
- 
+      {{ table1 | safe }}
 
-
+  </tbody>
+</table>
  <br></br>
 
-    {{ table1 }}
+    
 
 
 
 
 </div>
 
+
+
+
+{%- for category, message in get_flashed_messages(with_categories = true) %}
+<div class = "alert alert-danger">
+   {{ message }}
+</div>
+{%- endfor %}
 {% endblock%}
