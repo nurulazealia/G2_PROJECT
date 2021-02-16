@@ -31,7 +31,7 @@ class Sounds(db.Model):
 
 @app.route("/", methods = ['GET', 'POST'])
 def home():
-    playlist = os.listdir('static/music/')[:10]
+    playlist = os.listdir('static/music/')[:10] # limit the content of playlist of to 10 files only
     return render_template("home.html", playlist=playlist)
     
 
