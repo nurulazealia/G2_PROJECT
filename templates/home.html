@@ -17,29 +17,85 @@
 <div class="container">
     <title>Bi-Sori</title>
     <br>
-    <i><h1> Listen to the sound </h1></i>
+    
     <br>
-      <audio controls="controls" autoplay="autoplay" ></audio>
-      <u1>
-          {% for song in playlist %}
-
-          <li><a href="javascript:void(0);" onclick="playSong('{{song}}')">{{song}}</a></li>
-
-          {% endfor %}
-      </u1>
+    <head>
+      <style>
+      {
+          box-sizing: border-box;
+      }
+      /* Set additional styling options for the columns*/
+      .column {
+      float: left;
+      width: 37%;
+      }
+  
+      .row:after {
+      content: "";
+      display: table;
+      clear: both;
+      }
+      </style>
+   </head>
+   
+  
+     <body>
+        <div class="row">
+          
+          
+            <div class="column" style="background-color:#ffffff;">
+              <tr>
+                <i><h1> Listen to the sound </h1></i>
+                <br><audio controls="controls" autoplay="autoplay" ></audio>
+                <u1>
+                    {% for song in playlist %}
+          
+                    <li><a href="javascript:void(0);" onclick="playSong('{{song}}')">{{song}}</a></li>
+          
+                    {% endfor %}
+                </u1>
+                
+                {%- for category, message in get_flashed_messages(with_categories = true) %}
+                   <div class = "alert alert-danger">
+                      {{ message }}
+                   </div>
+                {%- endfor %}
+                
+                  <script type="text/javascript">
+                      function playSong(song){
+                          $('audio').attr('src', '/static/music/'+song)
+                      }
+                  </script></tr>
+                <br></br>
+            </tr>
+  </div>
+  <div class="column" style="background-color:#ffffff;" allign="middle" text-align="justify" >
       
-      {%- for category, message in get_flashed_messages(with_categories = true) %}
-         <div class = "alert alert-danger">
-            {{ message }}
-         </div>
-      {%- endfor %}
+
+      <center>
+      <body>
       
-        <script type="text/javascript">
-            function playSong(song){
-                $('audio').attr('src', '/static/music/'+song)
-            }
-        </script>
-      <br></br>
+      <table id="t01">
+          <tr>
+            <center><img src = "https://33.media.tumblr.com/7a73856ab9301e8e4f27137dcb349219/tumblr_n63plyhz5t1qk9powo1_500.gif" width="700" allign = "left" ></center>
+            
+          <br><br><br></tr>
+        
+      </table>
+      </body>
+      </center>
+
+
+  <!-- <br>
+  <br>
+  <br>
+  
+  <br>
+  <p></p>
+  <p></p>
+  <p></p> -->
+  </div>
+      
 
 
   </div>

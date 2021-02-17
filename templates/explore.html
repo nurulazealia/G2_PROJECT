@@ -4,11 +4,21 @@
 
 <div class="container">
     <title> Explore </title>
-    <h1> Explore more rainsound </h1><br>
+    <h1><i> Explore more rainsound </h1></i><br>
     <p>This page contains all rainsounds send by our users from all around the world.</p>
-    <p>Click View to listen, download and know more about the sound.</p>
     
-    <table id="example" class="table table-striped" style="width:100%">
+    
+    <form action = "/explore" enctype="multipart/form-data" method="POST">
+        <div class="form-group">
+            <input type = "text" class = "form-control" 
+            name = "search" placeholder= "Search by file name or location" />
+        </div>
+          <input type = "submit" value = "Search" />
+        
+        </form>
+<br>
+<p>Click View to listen, download and know more about the sound.</p> 
+<table id="example" class="table table-striped" style="width:100%">
     <thead>
       
       <style>
@@ -38,7 +48,15 @@
   </thead>
   <tbody>
      
-      
+    {% with messages = get_flashed_messages() %}
+  {% if messages %}
+    <ul class=flashes>
+    {% for message in messages %}
+      <li>{{ message }}</li>
+    {% endfor %}
+    </ul>
+  {% endif %}
+{% endwith %}
 
       {{ table1 | safe }}
 

@@ -1,4 +1,4 @@
-from flask import Flask, render_template, redirect, request, send_file
+from flask import Flask, render_template, redirect, request, send_file, flash
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 from tables import Results, Explore, Reports, Paths
@@ -14,6 +14,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
 db = SQLAlchemy(app)
 
 class Sounds(db.Model):
+    __searchable__ = ['title', 'location']
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(200), nullable=False)
     username = db.Column(db.String(200), nullable=False)
@@ -39,11 +40,26 @@ def home():
 def about():
     return render_template("about.html")
 
-@app.route("/explore")
+@app.route("/explore", methods = ['GET', 'POST'])
 def explore():
-    sounds = Sounds.query.order_by(Sounds.date_uploaded)
-    table1 = Explore(sounds)
-    return render_template("explore.html", sounds=sounds, table1=table1)
+    
+    if request.method == "POST":
+        search = request.form["search"]
+        file_name = Sounds.query.filter(Sounds.title.contains(search)).all()
+        file_location = Sounds.query.filter(Sounds.location.contains(search)).all()
+        sounds = file_name + file_location
+        if not sounds: 
+            flash("No results found")
+            return redirect("/explore")
+        else:
+            table1 = Explore(sounds)
+            return render_template("explore.html", sounds=sounds, table1=table1)
+            
+    else:
+        sounds = Sounds.query.order_by(Sounds.date_uploaded)
+        table1 = Explore(sounds)
+        return render_template("explore.html", sounds=sounds, table1=table1)
+    
 
 @app.route("/download/<int:id>")
 def download(id):
@@ -181,4 +197,6 @@ def record():
 app.config["FILE_UPLOADS"] = "/home/azealiaa/flask_project/G2_PROJECT/static/music"
 
 if __name__ == "__main__":
+    app.secret_key = '12345'
     app.run(debug=True)
+    
