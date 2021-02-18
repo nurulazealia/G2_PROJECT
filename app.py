@@ -8,6 +8,7 @@ import librosa, librosa.display # Librosa is a Python library that helps us work
 import matplotlib.pyplot as plt 
 import numpy as np 
 
+# database model
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
 
@@ -30,16 +31,18 @@ class Sounds(db.Model):
     def __repr__(self):
         return '<Title %r>' %self.id
 
+# home page
 @app.route("/", methods = ['GET', 'POST'])
 def home():
     playlist = os.listdir('static/music/')[:10] # limit the content of playlist of to 10 files only
     return render_template("home.html", playlist=playlist)
     
-
+# about us page
 @app.route("/about")
 def about():
     return render_template("about.html")
 
+# explore page
 @app.route("/explore", methods = ['GET', 'POST'])
 def explore():
     
@@ -60,13 +63,14 @@ def explore():
         table1 = Explore(sounds)
         return render_template("explore.html", sounds=sounds, table1=table1)
     
-
+# extension of audio control features : download
 @app.route("/download/<int:id>")
 def download(id):
     list_to_download = Sounds.query.get_or_404(id)
-    download_audio = "/home/azealiaa/flask_project/G2_PROJECT" + list_to_download.sound_path
+    download_audio = "/home/zh/myflaskapp/G2_PROJECT" + list_to_download.sound_path
     return send_file(download_audio, as_attachment=True)
 
+# extension of explore page
 @app.route("/show/<int:id>", methods = ['GET'])
 def show(id):
     list_to_show = Sounds.query.get_or_404(id)
@@ -82,10 +86,11 @@ def show(id):
     download_id =  list_to_show.id
     return render_template("show.html", list_to_show = list_to_show, user=user, location=location, playing=playing, playlist=playlist, image_display=image_display, duration=duration, filetype=filetype, filesize=filesize, sampling=sampling, download_id=download_id)
 
+# delete features
 @app.route("/delete/<int:id>")
 def delete(id):
     list_to_delete = Sounds.query.get_or_404(id)
-    path = "/home/azealiaa/flask_project/G2_PROJECT"
+    path = "/home/zh/myflaskapp/G2_PROJECT"
     sound = path + list_to_delete.sound_path
     image = path + list_to_delete.waveform_path
     os.remove(os.path.join(sound))
@@ -97,6 +102,7 @@ def delete(id):
     except:
         return "There was a problem deleting"
 
+# setting for admin login details
 @app.route("/login", methods = ['POST', 'GET'])
 def login():
     if request.method == "POST":
@@ -107,8 +113,7 @@ def login():
     else:
         return render_template('login.html')
 
-    
-    
+# database page - record of audio files details
 @app.route("/database", methods = ['POST', 'GET'])
 def database():
     
@@ -124,12 +129,13 @@ def database():
 
     return render_template("database.html", sounds=sounds, table=table, table_result=table_result, table_path=table_path)
 
+# extension of upload feature : confirmation page
 @app.route("/confirm")
 def confirm():
     
     return render_template("confirm.html")
 
-
+# upload page - storing files and generating files report
 @app.route("/upload", methods = ['POST', 'GET'])
 def upload():
     db.create_all()
@@ -142,12 +148,12 @@ def upload():
             audio_filename = request.form["filename"]
             filename = secure_filename(audio_filename)
             user = secure_filename(request.form["username"])
-            audio.save(os.path.join("/home/azealiaa/flask_project/G2_PROJECT/static/music/" + user + "_" + filename))
+            audio.save(os.path.join("/home/zh/myflaskapp/G2_PROJECT/static/music/" + user + "_" + filename))
             image_name = filename.split('.')
-            image = "/home/azealiaa/flask_project/G2_PROJECT/static/images/" + user + "_" + image_name[0] + ".png"
+            image = "/home/zh/myflaskapp/G2_PROJECT/static/images/" + user + "_" + image_name[0] + ".png"
             image_path = "/static/images/" + user + "_" + image_name[0] + ".png"
             audio_path = "/static/music/" + user + "_" + filename
-            file = "/home/azealiaa/flask_project/G2_PROJECT/static/music/" + user + "_" + filename 
+            file = "/home/zh/myflaskapp/G2_PROJECT/static/music/" + user + "_" + filename 
             plt.clf()
             signal, sr = librosa.load(file)
             plt.figure(figsize=(10,10))
@@ -179,6 +185,7 @@ def upload():
     else:
         return render_template("upload.html")
 
+# record page
 @app.route("/record", methods=['POST', 'GET'])
 def record():
     db.create_all()
@@ -194,7 +201,8 @@ def record():
     else:
         return render_template("record.html")
 
-app.config["FILE_UPLOADS"] = "/home/azealiaa/flask_project/G2_PROJECT/static/music"
+# file configuration
+app.config["FILE_UPLOADS"] = "/home/zh/myflaskapp/G2_PROJECT/static/music"
 
 if __name__ == "__main__":
     app.secret_key = '12345'

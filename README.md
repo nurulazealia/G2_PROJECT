@@ -17,17 +17,8 @@ Aze from G2
 
 -----------
 
-Thank you for the guidance.
+Bisori websites has been completed.
 
-Regards,
-Ulfah
+By Aze, Ulfah and Yousouf.
 
------------
-
-14/2/2021
-
-Remember to change directory address before running.
-
-Images folder under static created to store spectrogram.png
-
-Ulfah
+Credit to : Asc. Prof. Muhammad Mun'im Ahmad Zabidi

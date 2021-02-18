@@ -9,7 +9,7 @@
    <u1>
        
    
-      
+      <!-- adding audio control, play and download button -->
       <center><audio controls="controls" allign = "center" autoplay="autoplay" ></audio></center>
       <center><a href="javascript:void(0);" allign = "middle" onclick="playSong('{{playlist}}')"><button class="btn btn-primary">Play</button></a>
       <a href="/download/{{download_id}}" target="black"><button class="btn btn-success">Download</button></a></center>
@@ -36,6 +36,8 @@
    <body>
       <div class="row">
           <div class="column" style="background-color:#ffffff;">
+  
+   <!-- display spectrogram and waveform -->
    <center><img src = "{{ image_display }}" allign = "middle" width="600" /></center>
 </div>
 <div class="column" style="background-color:#ffffff;">
@@ -71,6 +73,7 @@
       <br><br>
       <h3 style="text-align:center"> Audio File Report </h3>
       
+      <!-- generating audio file report -->
       <table id="t01">
         <tr>
           <th>User</th>
