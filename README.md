@@ -1,7 +1,7 @@
 # Flask Project by G2
 
 This project is made via Windows Subsystem for Linux. All codings are ran on Ubuntu terminal. 
-We use SQLAlchemy with SQLite for our database. 
+We use SQLAlchemy with SQLite for our database, and this project only works on Local Server only. 
 
 ## Get started
 
