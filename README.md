@@ -29,11 +29,22 @@ We use SQLAlchemy with SQLite for our database.
 6. Install all dependencies
 > pip3 install -r requirements.txt
 
-7. Start the server locally
+
+## Run the server
+
+1. Open app.py file
+> sudo nano app.py
+
+2. Edit the mainpath (Change to your local path)
+```
+mainpath = "insert your local path here"
+```
+
+3. Start the server locally
 > python3 app.py
 
-## Troubleshoot
-If step 7 failed, please try:
+OR 
+
 > python app.py
 
 -----------
