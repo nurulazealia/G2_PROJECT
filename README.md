@@ -35,7 +35,7 @@ We use SQLAlchemy with SQLite for our database, and this project only works on L
 1. Open app.py file
 > sudo nano app.py
 
-2. Edit the mainpath (Change to your local path)
+2. Change the **mainpath = "/home/zh/myflaskapp/G2_PROJECT"** to your local path
 ```
 mainpath = "insert your local path here"
 ```
