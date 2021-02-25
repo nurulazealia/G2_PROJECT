@@ -1,24 +1,40 @@
-# G2_PROJECT
-We are from G2. This is the repo for our Software Engineering Project. 
+# Flask Project by G2
 
-To clone this repo, please install Flask in your local computer and activate the virtual environment first. To run any of files, make sure you are in virtual enviroment shell. 
+This project is made via Windows Subsystem for Linux. All codings are ran on Ubuntu terminal. 
+We use SQLAlchemy with SQLite for our database. 
 
-You can refer to: https://linuxize.com/post/how-to-install-flask-on-ubuntu-18-04/ but just follow until $pip install Flask
+## Get started
 
-To go into venv shell everytime before running flask website, run $source venv/bin/activate
+1. Install Python 3.7 (or above)
+> sudo apt-get install python3.7
 
-Make sure to pull this repo everytime you want to work on it to avoid any conflicts. If any conflicts arise, please let others know as well. 
+2. Install PIP
+> sudo apt install python3-pip
 
-Update: i used SQLAlchemy for the database. Please install it to your local repo by running this in the venv:
-$pip install flask-sqlalchemy
+3. Update package index
+> sudo apt update
 
-Regards,
-Aze from G2
+4. Create and activate virtual environment
+> sudo apt install python3-venv
+> python3 -m venv venv
+> source venv/bin/activate
+
+5. Clone the repository and get into the directory
+> git clone https://github.com/nurulazealia/G2_PROJECT
+> cd G2_PROJECT
+
+6. Install all dependencies
+> pip3 install -r requirements.txt
+
+7. Start the server locally
+> python3 app.py
+OR 
+> python app.py
 
 -----------
 
 Bisori websites has been completed.
 
-By Aze, Ulfah and Yousouf.
+By Aze, Ulfah and Yousouf (Members of G2)
 
 Credit to : Asc. Prof. Muhammad Mun'im Ahmad Zabidi
