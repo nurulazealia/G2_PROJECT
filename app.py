@@ -8,6 +8,10 @@ import librosa, librosa.display # Librosa is a Python library that helps us work
 import matplotlib.pyplot as plt 
 import numpy as np 
 
+# path to static folder
+# PLEASE CHANGE THIS TO YOUR LOCAL PATH
+mainpath = "/home/zh/myflaskapp/G2_PROJECT"
+
 # database model
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
@@ -67,7 +71,7 @@ def explore():
 @app.route("/download/<int:id>")
 def download(id):
     list_to_download = Sounds.query.get_or_404(id)
-    download_audio = "/home/zh/myflaskapp/G2_PROJECT" + list_to_download.sound_path
+    download_audio = mainpath + list_to_download.sound_path
     return send_file(download_audio, as_attachment=True)
 
 # extension of explore page
@@ -90,9 +94,8 @@ def show(id):
 @app.route("/delete/<int:id>")
 def delete(id):
     list_to_delete = Sounds.query.get_or_404(id)
-    path = "/home/zh/myflaskapp/G2_PROJECT"
-    sound = path + list_to_delete.sound_path
-    image = path + list_to_delete.waveform_path
+    sound = mainpath + list_to_delete.sound_path
+    image = mainpath + list_to_delete.waveform_path
     os.remove(os.path.join(sound))
     os.remove(os.path.join(image))
     try:
@@ -148,12 +151,12 @@ def upload():
             audio_filename = request.form["filename"]
             filename = secure_filename(audio_filename)
             user = secure_filename(request.form["username"])
-            audio.save(os.path.join("/home/zh/myflaskapp/G2_PROJECT/static/music/" + user + "_" + filename))
+            audio.save(os.path.join(mainpath + "/static/music/" + user + "_" + filename))
             image_name = filename.split('.')
-            image = "/home/zh/myflaskapp/G2_PROJECT/static/images/" + user + "_" + image_name[0] + ".png"
+            image = mainpath + "/static/images/" + user + "_" + image_name[0] + ".png"
             image_path = "/static/images/" + user + "_" + image_name[0] + ".png"
             audio_path = "/static/music/" + user + "_" + filename
-            file = "/home/zh/myflaskapp/G2_PROJECT/static/music/" + user + "_" + filename 
+            file = mainpath + "/static/music/" + user + "_" + filename 
             plt.clf()
             signal, sr = librosa.load(file)
             plt.figure(figsize=(10,10))
@@ -200,9 +203,6 @@ def record():
         return render_template('record.html', request="POST")   
     else:
         return render_template("record.html")
-
-# file configuration
-app.config["FILE_UPLOADS"] = "/home/zh/myflaskapp/G2_PROJECT/static/music"
 
 if __name__ == "__main__":
     app.secret_key = '12345'
