@@ -16,11 +16,14 @@ We use SQLAlchemy with SQLite for our database.
 
 4. Create and activate virtual environment
 > sudo apt install python3-venv
+> 
 > python3 -m venv venv
+> 
 > source venv/bin/activate
 
 5. Clone the repository and get into the directory
 > git clone https://github.com/nurulazealia/G2_PROJECT
+> 
 > cd G2_PROJECT
 
 6. Install all dependencies
