@@ -31,7 +31,9 @@ We use SQLAlchemy with SQLite for our database.
 
 7. Start the server locally
 > python3 app.py
-OR 
+
+## Troubleshoot
+If step 7 failed, please try:
 > python app.py
 
 -----------
