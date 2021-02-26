@@ -47,6 +47,26 @@ OR
 
 > python app.py
 
+
+## Features available 
+
+We provide website that allows user to record, upload, download & play audio (specially for rainsounds). 
+
+Apart from that, our website also provides the audio reports containing the details of each audio file includes:
+
+1. Waveform of the audio file
+
+2. Spectogram of the audio file
+
+3. File type
+
+4. Audio duration
+
+5. File size
+
+6. Sampling frequency
+ 
+
 -----------
 
 Bisori websites has been completed.
